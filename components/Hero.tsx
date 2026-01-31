@@ -7,6 +7,11 @@ export const Hero: React.FC = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const navigateToService = (hash: string) => {
+    window.location.hash = hash;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <section className="relative pt-24 pb-36 overflow-hidden bg-white">
       {/* Background Layer with Image and Gradients */}
@@ -14,9 +19,9 @@ export const Hero: React.FC = () => {
         <img 
           src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=2000" 
           alt="Modern Architecture" 
-          className="w-full h-full object-cover opacity-[0.05] grayscale"
+          className="w-full h-full object-cover opacity-[0.03] grayscale"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-white via-white/30 to-white"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-white via-white/40 to-white"></div>
         <div className="absolute top-[-20%] right-[-10%] w-[800px] h-[800px] bg-blue-50/50 rounded-full blur-[140px]"></div>
         <div className="absolute bottom-0 left-[-5%] w-[600px] h-[600px] bg-indigo-50/40 rounded-full blur-[120px]"></div>
       </div>
@@ -40,7 +45,7 @@ export const Hero: React.FC = () => {
 
         <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6 animate-fade-up" style={{ animationDelay: '0.4s' }}>
           <button 
-            onClick={() => { window.location.hash = '#service-software'; }}
+            onClick={() => navigateToService('#service-software')}
             className="group w-full sm:w-auto px-12 py-5 bg-blue-600 text-white rounded-full font-bold hover:bg-blue-700 transition-all shadow-2xl shadow-blue-200/50 flex items-center justify-center"
           >
             Explore Solutions 
