@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 const serviceCategories = [
   {
@@ -60,42 +60,44 @@ const serviceCategories = [
 ];
 
 export const Header: React.FC = () => {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   const navigate = (hash: string) => {
     window.location.hash = hash;
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    setIsMobileMenuOpen(false);
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-md shadow-sm z-50 border-b border-slate-100">
-      <div className="container mx-auto px-6 h-20 flex items-center justify-between">
+    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-white/95 backdrop-blur-md shadow-md h-16' : 'bg-white h-20'} border-b border-slate-100`}>
+      <div className="container mx-auto px-6 h-full flex items-center justify-between">
         <div 
           className="flex flex-col cursor-pointer" 
           onClick={() => navigate('#home')}
         >
-          <span className="text-xl font-bold text-slate-900 tracking-tight leading-none uppercase">Zias Innovative Technologies</span>
-          <span className="text-[10px] uppercase tracking-widest text-blue-600 font-semibold mt-1">A Seematti Group Company</span>
+          <span className="text-lg md:text-xl font-bold text-slate-900 tracking-tight leading-none uppercase">Zias Innovative Technologies</span>
+          <span className="text-[9px] md:text-[10px] uppercase tracking-widest text-blue-600 font-semibold mt-1">A Seematti Group Company</span>
         </div>
 
+        {/* Desktop Nav */}
         <nav className="hidden lg:flex items-center space-x-10">
-          <button 
-            onClick={() => navigate('#home')} 
-            className="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors"
-          >
-            Home
-          </button>
-          <button 
-            onClick={() => navigate('#about')} 
-            className="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors"
-          >
-            About Us
-          </button>
+          <button onClick={() => navigate('#home')} className="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors">Home</button>
+          <button onClick={() => navigate('#about')} className="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors">About Us</button>
           
           <div className="relative group">
             <button className="flex items-center text-sm font-medium text-slate-600 group-hover:text-blue-600 transition-colors py-8">
               Services <i className="fa-solid fa-chevron-down ml-1.5 text-[10px] transition-transform group-hover:rotate-180"></i>
             </button>
             
-            {/* MEGA MENU: Adjusted alignment to center and viewport safety */}
             <div className="mega-menu absolute top-full left-1/2 w-[1140px] max-w-[95vw] bg-white border border-slate-100 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.15)] rounded-[32px] p-8 overflow-hidden z-[100]">
               <div className="grid grid-cols-5 gap-4">
                 {serviceCategories.map((s, i) => (
@@ -107,10 +109,7 @@ export const Header: React.FC = () => {
                     <div className="flex-grow">
                       <h4 className="text-[14px] font-bold text-slate-900 mb-1 leading-tight">{s.title}</h4>
                       <p className="text-[9px] font-bold text-blue-600 uppercase tracking-wider mb-3">{s.type}</p>
-                      <p className="text-[11px] text-slate-500 mb-4 leading-relaxed line-clamp-3">
-                        {s.desc}
-                      </p>
-                      
+                      <p className="text-[11px] text-slate-500 mb-4 leading-relaxed line-clamp-3">{s.desc}</p>
                       <ul className="space-y-1.5 mb-6">
                         {s.highlights.map((h, idx) => (
                           <li key={idx} className="flex items-center text-[10px] text-slate-400 font-medium">
@@ -120,49 +119,69 @@ export const Header: React.FC = () => {
                         ))}
                       </ul>
                     </div>
-
-                    <button 
-                      onClick={() => navigate(s.hash)}
-                      className="text-[11px] font-bold text-slate-900 group-hover/card:text-blue-600 transition-colors flex items-center mt-auto"
-                    >
+                    <button onClick={() => navigate(s.hash)} className="text-[11px] font-bold text-slate-900 group-hover/card:text-blue-600 transition-colors flex items-center mt-auto">
                       View More <i className="fa-solid fa-arrow-right-long ml-2 transition-transform group-hover/card:translate-x-1"></i>
                     </button>
                   </div>
                 ))}
               </div>
-              
-              <div className="mt-8 pt-6 border-t border-slate-100 flex items-center justify-between">
-                <p className="text-xs text-slate-400 italic font-medium">Need a custom solution? Our experts are ready to assist you.</p>
-                <button 
-                  onClick={() => navigate('#contact')}
-                  className="text-xs font-bold text-blue-600 hover:text-blue-700 transition-colors"
-                >
-                  See all capabilities →
-                </button>
-              </div>
             </div>
           </div>
 
-          <button 
-            onClick={() => navigate('#future')} 
-            className="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors"
-          >
-            Future
-          </button>
-          <button 
-            onClick={() => navigate('#contact')} 
-            className="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors"
-          >
-            Contact
-          </button>
+          <button onClick={() => navigate('#future')} className="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors">Future</button>
+          <button onClick={() => navigate('#contact')} className="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors">Contact</button>
         </nav>
 
-        <button 
-          onClick={() => navigate('#contact')}
-          className="bg-blue-600 text-white px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-200 transition-all duration-300"
-        >
-          Request Demo
-        </button>
+        <div className="flex items-center space-x-4">
+          <button 
+            onClick={() => navigate('#contact')}
+            className="hidden sm:block bg-blue-600 text-white px-6 py-2 rounded-full text-sm font-semibold hover:bg-blue-700 hover:shadow-lg transition-all duration-300"
+          >
+            Request Demo
+          </button>
+          
+          {/* Mobile Menu Toggle */}
+          <button 
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="lg:hidden w-10 h-10 flex items-center justify-center text-slate-900 hover:bg-slate-50 rounded-full transition-colors"
+          >
+            <i className={`fa-solid ${isMobileMenuOpen ? 'fa-xmark' : 'fa-bars'} text-xl`}></i>
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile Menu Overlay */}
+      <div className={`lg:hidden fixed inset-0 top-[64px] bg-white z-[60] transition-transform duration-500 transform ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+        <div className="flex flex-col h-full p-8 overflow-y-auto">
+          <div className="space-y-6 mb-12">
+            <button onClick={() => navigate('#home')} className="block w-full text-left text-2xl font-bold text-slate-900">Home</button>
+            <button onClick={() => navigate('#about')} className="block w-full text-left text-2xl font-bold text-slate-900">About Us</button>
+            <div className="py-4 border-y border-slate-100">
+              <span className="block text-[10px] font-bold text-blue-600 uppercase tracking-widest mb-6">Our Services</span>
+              <div className="space-y-6">
+                {serviceCategories.map((s, i) => (
+                  <button key={i} onClick={() => navigate(s.hash)} className="flex items-center w-full text-left group">
+                    <div className={`w-10 h-10 rounded-xl ${s.bgColor} ${s.color} flex items-center justify-center mr-4 group-hover:scale-110 transition-transform`}>
+                      <i className={`fa-solid ${s.icon}`}></i>
+                    </div>
+                    <div>
+                      <div className="text-sm font-bold text-slate-900">{s.title}</div>
+                      <div className="text-[10px] text-slate-500">{s.type}</div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+            <button onClick={() => navigate('#future')} className="block w-full text-left text-2xl font-bold text-slate-900">Future</button>
+            <button onClick={() => navigate('#contact')} className="block w-full text-left text-2xl font-bold text-slate-900">Contact</button>
+          </div>
+          <button 
+            onClick={() => navigate('#contact')}
+            className="w-full py-4 bg-blue-600 text-white rounded-2xl font-bold text-lg shadow-xl shadow-blue-100 mb-8"
+          >
+            Request a Free Demo
+          </button>
+        </div>
       </div>
     </header>
   );
